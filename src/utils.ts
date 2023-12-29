@@ -1,4 +1,3 @@
-
 import { NewDiaryEntry, Weather, Visibility } from './types';
 
 const isString = (text: unknown): text is string => {
@@ -19,13 +18,18 @@ const isDate = (date: string): boolean => {
 
 const parseDate = (date: unknown): string => {
   if (!isString(date) || !isDate(date)) {
-      throw new Error('Incorrect date: ' + date);
+    throw new Error('Incorrect date: ' + date);
   }
   return date;
 };
 
+// const isWeather = (param: string): param is Weather => {
+//   return Object.values(Weather).map(v => v.toString()).includes(param);
+// };
+
+// changed Weather from enum to union type
 const isWeather = (param: string): param is Weather => {
-  return Object.values(Weather).map(v => v.toString()).includes(param);
+  return ['sunny', 'rainy', 'cloudy', 'stormy', 'windy'].includes(param);
 };
 
 const parseWeather = (weather: unknown): Weather => {
@@ -35,30 +39,40 @@ const parseWeather = (weather: unknown): Weather => {
   return weather;
 };
 
+// const isVisibility = (param: string): param is Visibility => {
+//   return Object.values(Visibility).map(v => v.toString()).includes(param);
+// };
+
+// changed Weather from enum to union type
 const isVisibility = (param: string): param is Visibility => {
-  return Object.values(Visibility).map(v => v.toString()).includes(param);
+  return ['great', 'good', 'ok', 'poor'].includes(param);
 };
 
 const parseVisibility = (visibility: unknown): Visibility => {
   if (!isString(visibility) || !isVisibility(visibility)) {
-      throw new Error('Incorrect visibility: ' + visibility);
+    throw new Error('Incorrect visibility: ' + visibility);
   }
   return visibility;
 };
 
 const toNewDiaryEntry = (object: unknown): NewDiaryEntry => {
-  if ( !object || typeof object !== 'object' ) {
+  if (!object || typeof object !== 'object') {
     throw new Error('Incorrect or missing data');
   }
 
-  if ('comment' in object && 'date' in object && 'weather' in object && 'visibility' in object)  {
+  if (
+    'comment' in object &&
+    'date' in object &&
+    'weather' in object &&
+    'visibility' in object
+  ) {
     const newEntry: NewDiaryEntry = {
       weather: parseWeather(object.weather),
       visibility: parseVisibility(object.visibility),
       date: parseDate(object.date),
-      comment: parseComment(object.comment)
+      comment: parseComment(object.comment),
     };
-  
+
     return newEntry;
   }
 
